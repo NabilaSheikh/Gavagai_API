@@ -1,33 +1,84 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="<?php echo "https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>css/main.css" /> 
- 
+<?php $varhttp= "http://";?>
+<link rel="stylesheet" type="text/css" href="<?php echo $varhttp . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>css/main.css" /> 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+.container{
+	padding-top: 15px;
+	width: 33%;
+}
+.btn-glyphicon {
+    padding:8px;
+    background:#ffffff;
+    margin-right:4px;
+}
+.icon-btn {
+    padding: 1px 15px 3px 2px;
+    border-radius:50px;
+}
+</style>
 </head>
 <body>
-
-
-<input type="file" id="myFile" accept=".docx,.pdf,.txt">
-<button class="button" onclick="uploadFile()">Call API</button>
-
-<div id='myChart'><a class="zc-ref" href="https://www.zingchart.com/">Charts by ZingChart</a></div>
+	<div class="container">
+		<div class="alert alert-warning" id="warning_notification" hidden>
+		  <strong>Warning!</strong> All fields are compulsory !.
+		</div>
+	</div>
+<div class="container">
+	
+	<div class="form-group">
+		<input type="file" id="myFile" accept=".pdf,.txt">
+	</div>
+	<div class="form-group">
+		<select class="form-control" id="languagesInList">
+		</select>
+	</div>
+	<div class="form-group">
+		<a class="btn icon-btn btn-info" onclick="uploadFile()" href="#">
+		<span class="glyphicon btn-glyphicon glyphicon-share img-circle text-info"></span>
+			Call API
+		</a>
+	</div>
+</div>
+		<div id='myChart'><a class="zc-ref" href="https://www.zingchart.com/">Charts by ZingChart</a>
+		</div>
+ 	
  
 
 </body>
 </html>
 
 
-<script type="text/javascript" src="<?php echo "https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>js/jquery-2.0.3.min.js"></script> 
+<script type="text/javascript" src="<?php echo $varhttp . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>js/jquery-2.0.3.min.js"></script> 
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+<script type="text/javascript" src="<?php echo $varhttp . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>js/bootstrap-filestyle.min.js"></script> 
 <input type="hidden" id="uploaded_file_name" value="">
 
 <script>
-	var base_url="<?php echo "https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>";
-/*upload file data*/
+	$('#myFile').filestyle({
+				buttonName : 'btn-success',
+                buttonText : ' Open'
+			});
+var base_url="<?php echo $varhttp . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>";
 
+/*upload file data*/
 function uploadFile() {
+	var lang=$('#languagesInList :selected').val();//$('#myFile').val();
     var file_data = $('#myFile').prop('files')[0]; 
-    if(file_data){ 
+    if(lang == 0 || !file_data){
+      showErrorInput();
+      return;
+      //alert('yeds');
+	}
+	//alert('no')
+//return;
+    filename =file_data['name'];
+    file_ext= filename.split('.').pop();
+
     var form_data = new FormData();                  
     form_data.append('file', file_data);
     //alert(form_data);                             
@@ -43,13 +94,39 @@ function uploadFile() {
                     console.log(php_script_response); // display response from the PHP script, if any
                     //document.getElementById("uploaded_file_name").val(php_script_response)
                     $( "#uploaded_file_name" ).val( php_script_response );
-                    getPdfContent();
+                    if ( file_ext == 'pdf'){
+                    	getPdfContent();
+                    }else if(file_ext == 'txt'){
+                    	getTxtContent()
+                    }
+                    
                 }
      });
+    
+}
+
+function getTxtContent(){
+	var file = base_url +'uploads/'+ $( "#uploaded_file_name" ).val();
+        
+	var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, false);
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                var allText = rawFile.responseText;
+                console.log(allText);
+                createJsonObjectforApi(allText) ;
+            }
+        }
     }
+    rawFile.send(null);
 }
 /*json data*/
 function createJsonObjectforApi(data){
+	var lang_chosen=$('#languagesInList :selected').val();
 	//console.log(typeof data);
 	//console.log(String(data));
 	data=String(data);
@@ -62,41 +139,38 @@ function createJsonObjectforApi(data){
          "uri":"unique identifier 1"
       }
    ],
-   "language":"EN",
+   "language":lang_chosen,
     "includeSentences": true
 }
 dataToSend = JSON.stringify(dataToSend);
 callGavagaiApi(dataToSend)
 }
-/*var dataToSend =
-{  
-   "texts":[  
-      {  
-         "body":"love text to analyze",
-	  "id":1,
-         "uri":"unique identifier 1"
-      }
-   ],
-   "language":"EN",
-    "includeSentences": true
-}
-dataToSend = JSON.stringify(dataToSend);*/
- ;
-/*$('input[type=file]').change(function () {
-    console.log(this.files[0].mozFullPath);
-    var x = document.getElementById("myFile").value;
-	alert(x);
-});*/
-function callGavagaiLanguageApi(){
 
-	/*$.ajax({
+$( document ).ready(function() {
+    console.log( "ready!" );
+    var listItems ="<option > Select Language </option>";
+    var jsonResult =["aa","bb","cc"];
+    for (var i = 0; i < jsonResult.length; i++) {
+    	listItems += "<option value='" + jsonResult[i] + "'>" + jsonResult[i] + "</option>";
+
+    }
+    $("#languagesInList").html(listItems);
+    
+    $.ajax({
 			type: "GET",
-	        url: "https://api.gavagai.se/v3/languages?apiKey=2d2afd9daf4cc5a17409b92f4c1a0c7e",
-	        success: function (data) {
-	                    alert(data);
+	        url: "https://api.gavagai.se/v3/languages?apiKey=084e65c223f1235947e07676e7757b5d",
+	        success: function (jsonResult) {
+	                    var listItems ="<option value=0> Select Language </option>";
+					    //var jsonResult =["aa","bb","cc"];
+					    for (var i = 0; i < jsonResult.length; i++) {
+					    	listItems += "<option value='" + jsonResult[i] + "'>" + jsonResult[i] + "</option>";
+
+					    }
+					    $("#languagesInList").html(listItems);
 	                }
-	});  */                
-}
+	});   
+});
+
 
 function callGavagaiApi(dataToSend){
 	//console.log(dataToSend);
@@ -105,7 +179,7 @@ function callGavagaiApi(dataToSend){
    			contentType: "application/json",
    			dataType: "json",
    			data:dataToSend,
-	        url: "https://api.gavagai.se/v3/tonality?apiKey=2d2afd9daf4cc5a17409b92f4c1a0c7e",
+	        url: "https://api.gavagai.se/v3/tonality?apiKey=084e65c223f1235947e07676e7757b5d",
 	        success: function (data) {
 	                  console.log(data);
 	                  //console.log(data.texts[0]);
@@ -115,25 +189,10 @@ function callGavagaiApi(dataToSend){
 }
 
 function showPieChart(data){
-	alert('ok');
+	//alert('ok');
 	for (var i = 0; i < data.tonality.length; i++) { 
-    console.log(data.tonality[i]);
+    //console.log(data.tonality[i]);
 
-    /*if(data.tonality[i]['normalizedScore']){
-    	alert(data.tonality[i]['normalizedScore']);
-    	var jsonObjectToShow =[
-    		{i:[
-    			//values:data.tonality[i]['normalizedScore'],
-    			//text:data.tonality[i]['tone']
-    		]
-    	}
-    	]
-    }*/
-
-    /*jsonObjectToShow[]={
-    	values:data.tonality[i]['normalizedScore']}
-    }*/
-    //console.log(jsonObjectToShow);
 }
  console.log(jsonObjectToShow);
 	var jsonObjectToShow= [{
@@ -153,19 +212,19 @@ function showPieChart(data){
       }, {
         values: [data.tonality[3]['normalizedScore']],
         text: data.tonality[3]['tone'],
-        backgroundColor: '#6877e5'
+        backgroundColor: '#cc0000'
       }, {
         text: data.tonality[4]['tone'],
         values: [data.tonality[4]['normalizedScore']],
-        backgroundColor: '#6FB07F'
+        backgroundColor: '#ff66b3'
       }, {
         text: data.tonality[5]['tone'],
         values: [data.tonality[5]['normalizedScore']],
-        backgroundColor: '#6FB07F'
+        backgroundColor: '#cc8800'
       }, {
         text: data.tonality[6]['tone'],
         values: [data.tonality[6]['normalizedScore']],
-        backgroundColor: '#6FB07F'
+        backgroundColor: '#a300cc'
       }, {
         text: data.tonality[7]['tone'],
         values: [data.tonality[7]['normalizedScore']],
@@ -203,7 +262,7 @@ function showPieChart(data){
       },
       title: {
         fontColor: "#8e99a9",
-        text: 'Global Browser Usage',
+        text: 'Tonality Results',
         align: "left",
         offsetX: 10,
         fontFamily: "Open Sans",
@@ -215,7 +274,7 @@ function showPieChart(data){
         fontColor: "#8e99a9",
         fontFamily: "Open Sans",
         fontSize: "16",
-        text: 'May 2016',
+        text: '-By Gavagai',
         align: "left"
       },
       plotarea: {
@@ -233,7 +292,7 @@ function showPieChart(data){
 }
 
                 </script>
-<script src="<?php echo "https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>js/pdf.js"></script>
+<script src="<?php echo $varhttp . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>js/pdf.js"></script>
 <script>
 	function getPdfContent(){
         var urlPDF = base_url +'uploads/'+ $( "#uploaded_file_name" ).val();
@@ -294,4 +353,9 @@ function showPieChart(data){
                 });
             });
         }
+        function showErrorInput(){
+	         //alert alert-warning
+	         $('#warning_notification').show()
+	         setTimeout(function(){ $('#warning_notification').hide(); }, 5000);
+	     }
     </script>
