@@ -233,7 +233,7 @@ function showPieChart(data){
 }
 
                 </script>
-<script src="../gavagai/js/pdf.js"></script>
+<script src="<?php echo "https://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>js/pdf.js"></script>
 <script>
 	function getPdfContent(){
         var urlPDF = base_url +'uploads/'+ $( "#uploaded_file_name" ).val();
