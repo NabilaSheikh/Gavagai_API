@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="../gavagai/css/main.css" /> 
+<link rel="stylesheet" type="text/css" href="<?php echo "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>gavagai/css/main.css" /> 
  
 </head>
 <body>
@@ -17,7 +17,7 @@
 </html>
 
 
-<script type="text/javascript" src="../gavagai/js/jquery-2.0.3.min.js"></script> 
+<script type="text/javascript" src="<?php echo "http://" . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>js/jquery-2.0.3.min.js"></script> 
 <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
 <input type="hidden" id="uploaded_file_name" value="">
 
