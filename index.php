@@ -95,6 +95,7 @@ function uploadFile() {
                 data: form_data,                         
                 type: 'post',
                 success: function(php_script_response){
+                  alert('ok');
                   //  console.log(php_script_response); // display response from the PHP script, if any
                     //document.getElementById("uploaded_file_name").val(php_script_response)
                     $( "#uploaded_file_name" ).val( php_script_response );
