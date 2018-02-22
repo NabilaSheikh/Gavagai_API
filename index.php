@@ -180,7 +180,7 @@ $(document).ready(function() {
 
     /*$.ajax({
         type: "GET",
-        url: "https://api.gavagai.se/v3/languages?apiKey=6a8673507c8986d772e2fd88de5a3f57",
+        url: "https://api.gavagai.se/v3/languages?apiKey=757e4a593b564717c8a0201681febafd",
         success: function(jsonResult) {
             var listItems = "<option value=0> Select Language </option>";
             //var jsonResult =["aa","bb","cc"];
@@ -203,7 +203,7 @@ function callGavagaiApi(dataToSend) {
         contentType: "application/json",
         dataType: "json",
         data: dataToSend,
-        url: "https://api.gavagai.se/v3/tonality?apiKey=6a8673507c8986d772e2fd88de5a3f57",
+        url: "https://api.gavagai.se/v3/tonality?apiKey=757e4a593b564717c8a0201681febafd",
         success: function(data) {
         	if(!data){
         		showGeneralError();
