@@ -82,7 +82,7 @@ function uploadFile() {
     var form_data = new FormData();                  
     form_data.append('file', file_data);
     //alert(base_url +'upload.php'); return;
-                              
+                      alert('ok');        
     $.ajax({
                 url: base_url +'upload.php', // point to server-side PHP script 
                 //dataType: 'text',  // what to expect back from the PHP script, if anything
@@ -97,10 +97,10 @@ function uploadFile() {
                     //document.getElementById("uploaded_file_name").val(php_script_response)
                     $( "#uploaded_file_name" ).val( php_script_response );
                     if ( file_ext == 'pdf'){
-                    	//alert('pdf');
+                    	alert('pdf');
                     	getPdfContent();
                     }else if(file_ext == 'txt'){
-                    	//alert('txt');
+                    	alert('txt');
                     	getTxtContent()
                     }
                     
