@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
    <head>
-      <?php $varhttp= "http://";?>
+      <?php $varhttp= "https://";?>
       <!-- CSS start -->
       <link rel="stylesheet" type="text/css" href="<?php echo $varhttp . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>css/main.css" />
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
@@ -15,10 +15,10 @@
       </div>
       <div class="container centre">
          <div class="alert alert-warning" id="warning_notification" hidden>
-            <strong>Warning!</strong> All fields are compulsory !.
+            <strong>Warning!</strong> All fields are compulsory !!!.
          </div>
-         <div class="alert alert-error" id="warning_notification_general" hidden>
-            <strong>Error!</strong> Something went bad !.
+         <div class="alert alert-danger" id="warning_notification_general" hidden>
+            <strong>Error!</strong> Something went bad with the API  !!!.
          </div>
       </div>
       <div class="container centre container-div-main">
@@ -47,6 +47,13 @@
                <span class="glyphicon btn-glyphicon glyphicon-share img-circle text-info"></span>
                Call API
                </a>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col-sm-3 form-group">
+            </div>
+            <div class="col-sm-3 form-group">
+               <img id="loading_result" src="https://media1.tenor.com/images/8ac12962c05648c55ca85771f4a69b2d/tenor.gif?itemid=9212724" style="height: 84px;" hidden="true">
             </div>
          </div>
       </div>
@@ -102,10 +109,10 @@ function uploadFile() {
             //document.getElementById("uploaded_file_name").val(php_script_response)
             $("#uploaded_file_name").val(php_script_response);
             if (file_ext == 'pdf') {
-                alert('pdf');
+             //   alert('pdf');
                 getPdfContent();
             } else if (file_ext == 'txt') {
-                alert('txt');
+            //    alert('txt');
                 getTxtContent()
             }
 
@@ -184,6 +191,8 @@ $(document).ready(function() {
 
 
 function callGavagaiApi(dataToSend) {
+	//loading_result
+	$('#loading_result').show();
     //console.log(dataToSend);
     $.ajax({
         type: "POST",
@@ -199,6 +208,7 @@ function callGavagaiApi(dataToSend) {
         		alert('data');
         	}
             console.log(data);
+            $('#loading_result').hide();
             //console.log(data.texts[0]);
             showPieChart(data.texts[0]);
         },
@@ -208,6 +218,7 @@ function callGavagaiApi(dataToSend) {
          error: function (jqXHR, exception) {
          	alert(jqXHR.status);
          	showGeneralError();
+         	$('#loading_result').hide();
          }
     });
 }
