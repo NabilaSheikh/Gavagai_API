@@ -56,6 +56,8 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
 <script type="text/javascript" src="<?php echo $varhttp . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>js/bootstrap-filestyle.min.js"></script> 
+<script src="<?php echo $varhttp . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>js/pdf.js"></script>
+
 <input type="hidden" id="uploaded_file_name" value="">
 
 <script>
@@ -83,7 +85,7 @@ function uploadFile() {
     form_data.append('file', file_data);
     //alert(form_data);                             
     $.ajax({
-                url: 'upload.php', // point to server-side PHP script 
+                url: base_url +'upload.php', // point to server-side PHP script 
                 dataType: 'text',  // what to expect back from the PHP script, if anything
                 cache: false,
                 contentType: false,
@@ -291,9 +293,7 @@ function showPieChart(data){
     });
 }
 
-                </script>
-<script src="<?php echo $varhttp . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>js/pdf.js"></script>
-<script>
+     
 	function getPdfContent(){
         var urlPDF = base_url +'uploads/'+ $( "#uploaded_file_name" ).val();
         //var urlPDF = '../gavagai/sample.pdf';
