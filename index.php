@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-<?php $varhttp= "https://";?>
+<?php $varhttp= "http://";?>
 <link rel="stylesheet" type="text/css" href="<?php echo $varhttp . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>css/main.css" /> 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 .container{
-  padding-top: 15px;
-  width: 33%;
+	padding-top: 15px;
+	width: 33%;
 }
 .btn-glyphicon {
     padding:8px;
@@ -22,30 +22,30 @@
 </style>
 </head>
 <body>
-  <div class="container">
-    <div class="alert alert-warning" id="warning_notification" hidden>
-      <strong>Warning!</strong> All fields are compulsory !.
-    </div>
-  </div>
+	<div class="container">
+		<div class="alert alert-warning" id="warning_notification" hidden>
+		  <strong>Warning!</strong> All fields are compulsory !.
+		</div>
+	</div>
 <div class="container">
-  
-  <div class="form-group">
-    <input type="file" id="myFile" accept=".pdf,.txt">
-  </div>
-  <div class="form-group">
-    <select class="form-control" id="languagesInList">
-    </select>
-  </div>
-  <div class="form-group">
-    <a class="btn icon-btn btn-info" onclick="uploadFile()" href="#">
-    <span class="glyphicon btn-glyphicon glyphicon-share img-circle text-info"></span>
-      Call API
-    </a>
-  </div>
+	
+	<div class="form-group">
+		<input type="file" id="myFile" accept=".pdf,.txt">
+	</div>
+	<div class="form-group">
+		<select class="form-control" id="languagesInList">
+		</select>
+	</div>
+	<div class="form-group">
+		<a class="btn icon-btn btn-info" onclick="uploadFile()" href="#">
+		<span class="glyphicon btn-glyphicon glyphicon-share img-circle text-info"></span>
+			Call API
+		</a>
+	</div>
 </div>
-    <div id='myChart'><a class="zc-ref" href="https://www.zingchart.com/">Charts by ZingChart</a>
-    </div>
-  
+		<div id='myChart'><a class="zc-ref" href="https://www.zingchart.com/">Charts by ZingChart</a>
+		</div>
+ 	
  
 
 </body>
@@ -61,21 +61,21 @@
 <input type="hidden" id="uploaded_file_name" value="">
 
 <script>
-  $('#myFile').filestyle({
-        buttonName : 'btn-success',
+	$('#myFile').filestyle({
+				buttonName : 'btn-success',
                 buttonText : ' Open'
-      });
+			});
 var base_url="<?php echo $varhttp . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>";
 
 /*upload file data*/
 function uploadFile() {
-  var lang=$('#languagesInList :selected').val();//$('#myFile').val();
+	var lang=$('#languagesInList :selected').val();//$('#myFile').val();
     var file_data = $('#myFile').prop('files')[0]; 
     if(lang == 0 || !file_data){
       showErrorInput();
       return;
-  }
-  
+	}
+	
     filename =file_data['name'];
     file_ext= filename.split('.').pop();
 
@@ -85,7 +85,8 @@ function uploadFile() {
                               
     $.ajax({
                 url: base_url +'upload.php', // point to server-side PHP script 
-                dataType: 'text',  // what to expect back from the PHP script, if anything
+                //dataType: 'text',  // what to expect back from the PHP script, if anything
+                dataType: "jsonp",
                 cache: false,
                 contentType: false,
                 processData: false,
@@ -96,11 +97,11 @@ function uploadFile() {
                     //document.getElementById("uploaded_file_name").val(php_script_response)
                     $( "#uploaded_file_name" ).val( php_script_response );
                     if ( file_ext == 'pdf'){
-                      //alert('pdf');
-                      getPdfContent();
+                    	//alert('pdf');
+                    	getPdfContent();
                     }else if(file_ext == 'txt'){
-                      //alert('txt');
-                      getTxtContent()
+                    	//alert('txt');
+                    	getTxtContent()
                     }
                     
                 }
@@ -109,9 +110,9 @@ function uploadFile() {
 }
 
 function getTxtContent(){
-  var file = base_url +'uploads/'+ $( "#uploaded_file_name" ).val();
+	var file = base_url +'uploads/'+ $( "#uploaded_file_name" ).val();
         
-  var rawFile = new XMLHttpRequest();
+	var rawFile = new XMLHttpRequest();
     rawFile.open("GET", file, false);
     rawFile.onreadystatechange = function ()
     {
@@ -129,16 +130,16 @@ function getTxtContent(){
 }
 /*json data*/
 function createJsonObjectforApi(data){
-  var lang_chosen=$('#languagesInList :selected').val();
-  //console.log(typeof data);
-  //console.log(String(data));
-  data=String(data);
-  var dataToSend =
+	var lang_chosen=$('#languagesInList :selected').val();
+	//console.log(typeof data);
+	//console.log(String(data));
+	data=String(data);
+	var dataToSend =
 {  
    "texts":[  
       {  
          "body":data,
-    "id":1,
+	  "id":1,
          "uri":"unique identifier 1"
       }
    ],
@@ -154,51 +155,51 @@ $( document ).ready(function() {
     var listItems ="<option > Select Language </option>";
     var jsonResult =["aa","bb","cc"];
     for (var i = 0; i < jsonResult.length; i++) {
-      listItems += "<option value='" + jsonResult[i] + "'>" + jsonResult[i] + "</option>";
+    	listItems += "<option value='" + jsonResult[i] + "'>" + jsonResult[i] + "</option>";
 
     }
     $("#languagesInList").html(listItems);
     
     $.ajax({
-      type: "GET",
-          url: "https://api.gavagai.se/v3/languages?apiKey=084e65c223f1235947e07676e7757b5d",
-          success: function (jsonResult) {
-                      var listItems ="<option value=0> Select Language </option>";
-              //var jsonResult =["aa","bb","cc"];
-              for (var i = 0; i < jsonResult.length; i++) {
-                listItems += "<option value='" + jsonResult[i] + "'>" + jsonResult[i] + "</option>";
+			type: "GET",
+	        url: "https://api.gavagai.se/v3/languages?apiKey=084e65c223f1235947e07676e7757b5d",
+	        success: function (jsonResult) {
+	                    var listItems ="<option value=0> Select Language </option>";
+					    //var jsonResult =["aa","bb","cc"];
+					    for (var i = 0; i < jsonResult.length; i++) {
+					    	listItems += "<option value='" + jsonResult[i] + "'>" + jsonResult[i] + "</option>";
 
-              }
-              $("#languagesInList").html(listItems);
-                  }
-  });   
+					    }
+					    $("#languagesInList").html(listItems);
+	                }
+	});   
 });
 
 
 function callGavagaiApi(dataToSend){
-  //console.log(dataToSend);
-  $.ajax({
-      type: "POST",
-        contentType: "application/json",
-        dataType: "json",
-        data:dataToSend,
-          url: "https://api.gavagai.se/v3/tonality?apiKey=084e65c223f1235947e07676e7757b5d",
-          success: function (data) {
-                    console.log(data);
-                    //console.log(data.texts[0]);
-                    showPieChart(data.texts[0]);
-                  }
-  });                  
+	//console.log(dataToSend);
+	$.ajax({
+			type: "POST",
+   			contentType: "application/json",
+   			dataType: "json",
+   			data:dataToSend,
+	        url: "https://api.gavagai.se/v3/tonality?apiKey=084e65c223f1235947e07676e7757b5d",
+	        success: function (data) {
+	                  console.log(data);
+	                  //console.log(data.texts[0]);
+	                  showPieChart(data.texts[0]);
+	                }
+	});                  
 }
 
 function showPieChart(data){
-  //alert('ok');
-  for (var i = 0; i < data.tonality.length; i++) { 
+	//alert('ok');
+	for (var i = 0; i < data.tonality.length; i++) { 
     //console.log(data.tonality[i]);
 
 }
  console.log(jsonObjectToShow);
-  var jsonObjectToShow= [{
+	var jsonObjectToShow= [{
         values: [data.tonality[0]['normalizedScore']],
         text: data.tonality[0]['tone'],
         backgroundColor: '#50ADF5',
@@ -233,7 +234,7 @@ function showPieChart(data){
         values: [data.tonality[7]['normalizedScore']],
         backgroundColor: '#6FB07F'
       }];
-  var myConfig = {
+	var myConfig = {
       type: "pie",
       plot: {
         borderColor: "#2B313B",
@@ -295,7 +296,7 @@ function showPieChart(data){
 }
 
      
-  function getPdfContent(){
+	function getPdfContent(){
         var urlPDF = base_url +'uploads/'+ $( "#uploaded_file_name" ).val();
         //var urlPDF = '../gavagai/sample.pdf';
         PDFJS.workerSrc =  base_url +'js/pdf.worker.js';
@@ -355,8 +356,8 @@ function showPieChart(data){
             });
         }
         function showErrorInput(){
-           //alert alert-warning
-           $('#warning_notification').show()
-           setTimeout(function(){ $('#warning_notification').hide(); }, 5000);
-       }
+	         //alert alert-warning
+	         $('#warning_notification').show()
+	         setTimeout(function(){ $('#warning_notification').hide(); }, 5000);
+	     }
     </script>
