@@ -63,7 +63,10 @@
    <input type="hidden" id="uploaded_file_name" value="">
 </html>
 <!-- JS start -->
-<script type="text/javascript" src="<?php echo $varhttp . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>js/jquery-2.0.3.min.js"></script> 
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
 <script type="text/javascript" src="<?php echo $varhttp . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>js/bootstrap-filestyle.min.js"></script> 
