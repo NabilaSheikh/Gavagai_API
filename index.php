@@ -94,7 +94,6 @@ function uploadFile() {
 
     var form_data = new FormData();
     form_data.append('file', file_data);
-    //alert(base_url +'upload.php'); return;
 
     $.ajax({
         url: base_url + 'upload.php', // point to server-side PHP script 
