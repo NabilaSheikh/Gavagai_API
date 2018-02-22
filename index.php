@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<?php $varhttp= "http://";?>
+<?php $varhttp= "https://";?>
 <link rel="stylesheet" type="text/css" href="<?php echo $varhttp . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>css/main.css" /> 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
