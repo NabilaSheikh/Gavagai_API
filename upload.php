@@ -1,5 +1,7 @@
 <?php
 
+  header('Access-Control-Allow-Origin: *');
+
     /*var_dump ($_FILES['file']['name']);*/
      
 //echo $_FILES['file']['name'];
