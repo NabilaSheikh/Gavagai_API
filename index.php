@@ -207,9 +207,9 @@ function callGavagaiApi(dataToSend) {
         success: function(data) {
         	if(!data){
         		showGeneralError();
-        		alert('no data');
+        	//	alert('no data');
         	}else{
-        		alert('data');
+        	//	alert('data');
         	}
             console.log(data);
             $('#loading_result').hide();
