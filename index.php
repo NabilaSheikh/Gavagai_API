@@ -85,9 +85,6 @@ function uploadFile() {
                               
     $.ajax({
                 url: base_url +'upload.php', // point to server-side PHP script 
-                beforeSend: function (request) {
-        request.setRequestHeader("Authorization", "Negotiate");
-    },
                 dataType: 'text',  // what to expect back from the PHP script, if anything
                 cache: false,
                 contentType: false,
