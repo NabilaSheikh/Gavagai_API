@@ -100,7 +100,7 @@ function uploadFile() {
     form_data.append('file', file_data);
 
     $.ajax({
-        url: base_url + 'upload.php', // point to server-side PHP script 
+        url: 'upload.php', // point to server-side PHP script 
         dataType: 'text', // what to expect back from the PHP script, if anything
         cache: false,
         async: false,
