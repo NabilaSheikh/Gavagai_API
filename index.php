@@ -19,7 +19,13 @@
             <strong>Warning!</strong> All fields are compulsory !!!.
          </div>
          <div class="alert alert-danger" id="warning_notification_general" hidden>
-            <strong>Error!</strong> Something went bad with the API  !!!.
+            <strong>Error!</strong> Something went bad with the API or Api key limit exceeded !!!.
+         </div>
+         <div class="alert alert-danger" id="warning_notification_file_size" hidden>
+            <strong>Error!</strong> File size should be less than 2 MB !!!.
+         </div>
+         <div class="alert alert-danger" id="warning_notification_file_ext" hidden>
+            <strong>Error!</strong> We Only support pdf / txt files !!!.
          </div>
       </div>
       <div class="container centre container-div-main">
@@ -38,6 +44,14 @@
             <div class="col-sm-3 form-group">
                <select class="form-control" id="languagesInList">
                </select>
+            </div>
+         </div>
+          <div class="row">
+            <div class="col-sm-3 form-group">
+               Please Enter your API Key
+            </div>
+            <div class="col-sm-3 form-group">
+               <input type="text" id="myApiKey" class="form-control">
             </div>
          </div>
          <div class="row">
@@ -76,7 +90,7 @@
    var base_url="<?php echo $varhttp . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>";
 </script>
 <!-- <script src="<?php echo $varhttp . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']; ?>js/custom.js"></script>
- --><!-- JS end -->
+ <!-- JS end -->
 <script>
 	$('#myFile').filestyle({
     buttonName: 'btn-success',
@@ -85,20 +99,31 @@
 
 /*upload file data*/
 function uploadFile() {
- // alert('yes');return;
+ 
+	 
     var lang = $('#languagesInList :selected').val(); //$('#myFile').val();
     var file_data = $('#myFile').prop('files')[0];
-    if (lang == 0 || !file_data) {
+    var apiKey=$('#myApiKey').val();
+    if (lang == 0 || !file_data || !apiKey) {
         showErrorInput();
         return;
     }
-
+    var file_size_valid=showFileSize();
+	 if(!file_size_valid){
+	 	showFileSizeError();
+	 	return;
+	 }
     filename = file_data['name'];
     file_ext = filename.split('.').pop();
+    
+    if ( !file_ext == 'pdf' || !file_ext == 'txt' ){
+        showInvalidFileExt();
+        return;
+    }
 
     var form_data = new FormData();
     form_data.append('file', file_data);
-
+    
     $.ajax({
         url: 'upload.php', // point to server-side PHP script 
         dataType: 'text', // what to expect back from the PHP script, if anything
@@ -113,10 +138,10 @@ function uploadFile() {
             //document.getElementById("uploaded_file_name").val(php_script_response)
             $("#uploaded_file_name").val(php_script_response);
             if (file_ext == 'pdf') {
-             //   alert('pdf');
+             
                 getPdfContent();
             } else if (file_ext == 'txt') {
-            //    alert('txt');
+           
                 getTxtContent()
             }
 
@@ -197,30 +222,25 @@ $(document).ready(function() {
 function callGavagaiApi(dataToSend) {
 	//loading_result
 	$('#loading_result').show();
-    //console.log(dataToSend);
+    var apiKey=$('#myApiKey').val();
     $.ajax({
         type: "POST",
         contentType: "application/json",
         dataType: "json",
         data: dataToSend,
-        url: "https://api.gavagai.se/v3/tonality?apiKey=757e4a593b564717c8a0201681febafd",
+        url: "https://api.gavagai.se/v3/tonality?apiKey="+apiKey,
         success: function(data) {
         	if(!data){
         		showGeneralError();
-        	//	alert('no data');
-        	}else{
-        	//	alert('data');
+        		
         	}
             console.log(data);
             $('#loading_result').hide();
             //console.log(data.texts[0]);
             showPieChart(data.texts[0]);
         },
-        /*error:function(data) {
-        	
-        },*/
          error: function (jqXHR, exception) {
-         	alert(jqXHR.status);
+         	
          	showGeneralError();
          	$('#loading_result').hide();
          }
@@ -228,7 +248,7 @@ function callGavagaiApi(dataToSend) {
 }
 
 function showPieChart(data) {
-    //alert('ok');
+    
     for (var i = 0; i < data.tonality.length; i++) {
         //console.log(data.tonality[i]);
 
@@ -301,8 +321,8 @@ function showPieChart(data) {
         },
         title: {
             fontColor: "#8e99a9",
-            text: 'Tonality Results',
-            align: "left",
+            text: '',
+            align: "centre",
             offsetX: 10,
             fontFamily: "Open Sans",
             fontSize: 25
@@ -313,8 +333,8 @@ function showPieChart(data) {
             fontColor: "#8e99a9",
             fontFamily: "Open Sans",
             fontSize: "16",
-            text: '-By Gavagai',
-            align: "left"
+            text: '',
+            align: "centre"
         },
         plotarea: {
             margin: "20 0 0 0"
@@ -332,7 +352,7 @@ function showPieChart(data) {
 
 
 function getPdfContent() {
-  //alert(base_url);return;
+  
     var urlPDF = base_url + 'uploads/' + $("#uploaded_file_name").val();
     //var urlPDF = '../gavagai/sample.pdf';
     PDFJS.workerSrc = base_url + 'js/pdf.worker.js';
@@ -350,16 +370,13 @@ function getPdfContent() {
 
         Promise.all(pagesPromises).then(function(pagesText) {
 
-            // Display text of all the pages in the console
-            //console.log(pagesText);
-            //alert(pagesText);
             createJsonObjectforApi(pagesText);
         });
 
     }, function(reason) {
         // PDF loading error
         console.error(reason);
-        //alert(reason);
+        
     });
 
 }
@@ -406,5 +423,54 @@ function showGeneralError() {
     setTimeout(function() {
         $('#warning_notification_general').hide();
     }, 5000);
+}
+function showFileSizeError() {
+    //alert alert-warning
+    $('#warning_notification_file_size').show()
+    setTimeout(function() {
+        $('#warning_notification_file_size').hide();
+    }, 5000);
+}
+function showInvalidFileExt() {
+    //alert alert-warning
+    $('#warning_notification_file_ext').show()
+    setTimeout(function() {
+        $('#warning_notification_file_ext').hide();
+    }, 5000);
+}
+//showInvalidFileExt
+function showFileSize() {
+    var input, file;
+
+    if (!window.FileReader) {
+        alert("The file API isn't supported on this browser yet.");
+        return;
+    }
+
+    input = document.getElementById('myFile');
+    if (!input) {
+        alert("Um, couldn't find the fileinput element.");
+    }
+    else if (!input.files) {
+        alert("This browser doesn't seem to support the `files` property of file inputs.");
+    }
+    else if (!input.files[0]) {
+        alert("Please select a file before clicking 'Load'");
+    }
+    else {
+        file = input.files[0]; console.log(file);
+        if(file.size < 2000000){
+        	return true;
+        }
+        //bodyAppend("p", "File " + file.name + " is " + file.size + " bytes in size");
+    }
+    return false;
+}
+function bodyAppend(tagName, innerHTML) {
+    var elm;
+
+    elm = document.createElement(tagName);
+    elm.innerHTML = innerHTML;
+    document.body.appendChild(elm);
 }
 	</script>
