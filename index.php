@@ -99,8 +99,7 @@
 
 /*upload file data*/
 function uploadFile() {
- 
-	 
+ 	 
     var lang = $('#languagesInList :selected').val(); //$('#myFile').val();
     var file_data = $('#myFile').prop('files')[0];
     var apiKey=$('#myApiKey').val();
@@ -120,7 +119,7 @@ function uploadFile() {
         showInvalidFileExt();
         return;
     }
-
+    $('#loading_result').show();
     var form_data = new FormData();
     form_data.append('file', file_data);
     
